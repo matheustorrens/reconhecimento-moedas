@@ -17,8 +17,11 @@ coin_values = {
 
 # Carregar o modelo treinado para reconhecimento de moedas
 coin_classifier = load_model("/mount/src/reconhecimento-moedas/reconhecimento_moedas//modelo/mode_acurracy89.h5")
+print(f'COIN_CLASSIFIER: {coin_classifier}')
 
 RTC_CONFIGURATION = RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
+print(f'RTC_CONFIGURATION: {RTC_CONFIGURATION}')
+
 
 class CoinRecognition(VideoTransformerBase):
     def __init__(self):
@@ -26,7 +29,7 @@ class CoinRecognition(VideoTransformerBase):
 
     def recv(self, frame):
         img = frame.to_ndarray(format="bgr24")
-        coins_count = {"1 real": 0, "50 centavos": 0, "25 centavos": 0, "10 centavos": 0, "5 centavos": 0}
+        coins_count = {"1 real": 1, "50 centavos": 0.50, "25 centavos": 0.25, "10 centavos": 0.10, "5 centavos": 0.05}
 
         # Converter imagem para escala de cinza
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -49,10 +52,14 @@ class CoinRecognition(VideoTransformerBase):
 
                 # Classificar a moeda
                 coin_class = classify_coin(coin_roi, coin_classifier)
+                print(f'coin_class: {coin_class}')
+
 
                 # Atualizar contador de moedas
                 if coin_class in coins_count:
                     coins_count[coin_class] += 1
+                    print(f'coins_count: {coins_count}')
+
 
                 # Desenhar contorno da moeda no frame original
                 cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
@@ -61,6 +68,7 @@ class CoinRecognition(VideoTransformerBase):
         # Exibir contagem de moedas
         for coin, count in coins_count.items():
             st.write(f"{coin}: {count}")
+
 
         return img
 
@@ -94,6 +102,8 @@ def main():
         st.header("Ativar câmera")
         st.write("Clique em 'Select Device' para selecionar a WebCam de sua preferência depois clique em selecionar 'Start' para ativar o reconhecimento de moedas")
         webrtc_ctx = webrtc_streamer(key="coin-recognition", mode=WebRtcMode.SENDRECV, rtc_configuration=RTC_CONFIGURATION, video_processor_factory=CoinRecognition)
+        print(f'webrtc_ctx: {webrtc_ctx}')
+
 
     elif choice == "Resultados":
         st.subheader("Resultados do Reconhecimento de Moedas")
