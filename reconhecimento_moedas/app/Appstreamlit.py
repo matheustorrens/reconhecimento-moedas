@@ -1,4 +1,5 @@
 import cv2
+print(cv2.__version__)
 import streamlit as st
 from streamlit_webrtc import webrtc_streamer, VideoTransformerBase, RTCConfiguration, WebRtcMode
 from tensorflow.keras.models import load_model
