@@ -1,6 +1,5 @@
 import cv2
 print(cv2.__version__)
-import execjs
 import streamlit as st
 from streamlit_webrtc import webrtc_streamer, VideoTransformerBase, RTCConfiguration, WebRtcMode
 from tensorflow.keras.models import load_model
@@ -113,7 +112,7 @@ try:
 
         else:
             pass
-        
+
 except AttributeError as e:
     print(f"Erro ao enviar dados: {e}")
 
