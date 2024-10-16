@@ -2,11 +2,13 @@ import cv2
 print(cv2.__version__)
 import streamlit as st
 from streamlit_webrtc import webrtc_streamer, VideoTransformerBase, RTCConfiguration, WebRtcMode
+import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array
 import numpy as np
 
 try:
+
     # Dicionário de valores das moedas
     coin_values = {
         "1 real": 1.00,
@@ -70,7 +72,7 @@ try:
             for coin, count in coins_count.items():
                 st.write(f"{coin}: {count}")
 
-
+            print(f'IMAGEMMMMMMMMMMMMM: {img}')
             return img
 
     def classify_coin(coin_roi, coin_classifier):
@@ -84,6 +86,7 @@ try:
         max_index = np.argmax(predictions)
         coin_classes = ["1 real", "50 centavos", "25 centavos", "10 centavos", "5 centavos"]
 
+        print(f'COIN CLASSESSSSSSSSSSSSSSSS: {coin_classes[max_index]}')
         return coin_classes[max_index]
 
     def main():
